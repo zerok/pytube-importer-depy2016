@@ -4,6 +4,7 @@ import pathlib
 import shutil
 
 from urllib.request import urlopen
+from slugify import slugify
 
 
 source_url = "http://veyepar.nextdayvideo.com/main/C/depy/S/depy_2016.json"
@@ -27,13 +28,14 @@ for episode in data:
     fields = episode['fields']
     video_url = fields.get('host_url')
     released = fields.get('released', False)
+    slug = slugify(fields['name'])
     if episode['model'] != "main.episode" or not video_url or not released or fields['state'] != 11:
         continue
     print(fields['slug'])
-    file_ = container / (fields['slug'] + '.json')
+    file_ = container / (slug + '.json')
     output = collections.OrderedDict([
         ('category', 'DePy 2016'),
-        ('slug', fields['slug'].lower()),
+        ('slug', slug),
         ('title', fields['name']),
         ('summary', ''),
         ('description', fields['description']),
